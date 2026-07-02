@@ -382,7 +382,11 @@ function startGame() {
 window.addEventListener('mousedown', (e) => { if(gameState==='playing') pressing = true; });
 window.addEventListener('mouseup', () => pressing = false);
 // Touch
-window.addEventListener('touchstart', (e) => { e.preventDefault(); if(gameState==='playing') pressing = true; }, {passive:false});
+window.addEventListener('touchstart', (e) => {
+  if(gameState==='menu' || gameState==='gameover') return;
+  e.preventDefault();
+  pressing = true;
+}, {passive:false});
 window.addEventListener('touchend', () => pressing = false);
 // Space / arrow keys
 window.addEventListener('keydown', (e) => { if((e.code==='Space'||e.code==='ArrowUp') && gameState==='playing') { e.preventDefault(); pressing = true; } });
