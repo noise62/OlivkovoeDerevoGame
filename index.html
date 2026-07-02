@@ -83,6 +83,22 @@
   #play-btn:hover { transform: scale(1.05); box-shadow: 0 0 40px #3a7a3a, 0 4px 30px rgba(0,0,0,0.6); }
   #play-btn:active { transform: scale(0.97); }
 
+  #music-btn {
+    background: transparent;
+    color: #7cb87c;
+    border: 1px solid #3a6a3a;
+    padding: 0.5rem 1.8rem;
+    font-size: 1rem;
+    font-family: 'Georgia', serif;
+    border-radius: 40px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.25s;
+    margin-bottom: 1.5rem;
+  }
+  #music-btn:hover { background: #1a3a1a; border-color: #5a9a5a; }
+  #music-btn.muted { color: #666; border-color: #444; }
+
   /* Olive tree deco */
   .tree-deco {
     position: absolute;
@@ -156,6 +172,20 @@
     transition: all 0.2s;
   }
   #restart-btn:hover { transform: scale(1.05); }
+  #menu-btn {
+    background: transparent;
+    color: #7cb87c;
+    border: 1px solid #3a6a3a;
+    padding: 0.7rem 2rem;
+    font-size: 1rem;
+    font-family: 'Georgia', serif;
+    border-radius: 40px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.25s;
+    margin-top: 0.8rem;
+  }
+  #menu-btn:hover { background: #1a3a1a; border-color: #5a9a5a; }
 
   /* Mobile hint */
   #mobile-hint {
@@ -184,6 +214,8 @@
     <button class="ctrl-btn active" id="ctrl-mouse" onclick="setControl('mouse')">🖥 Компьютер</button>
     <button class="ctrl-btn" id="ctrl-touch" onclick="setControl('touch')">📱 Телефон</button>
   </div>
+  <div class="menu-label" style="margin-top:0.5rem;">Музыка</div>
+  <button id="music-btn" onclick="toggleMusic()">🔊 Вкл</button>
   <button id="play-btn" onclick="startGame()">ИГРАТЬ</button>
 </div>
 
@@ -200,6 +232,7 @@
   <div class="score-display">Счёт: <span id="final-score">0</span> м</div>
   <div class="best-display">Рекорд: <span id="best-score">0</span> м</div>
   <button id="restart-btn" onclick="startGame()">ЕЩЁ РАЗ</button>
+  <button id="menu-btn" onclick="goToMenu()">ГЛАВНОЕ МЕНЮ</button>
 </div>
 
 <!-- AUDIO -->
@@ -289,9 +322,37 @@ function setControl(mode) {
 
 // ===== MUSIC =====
 const music = document.getElementById('bgMusic');
+let musicOn = true;
+
+function toggleMusic() {
+  musicOn = !musicOn;
+  const btn = document.getElementById('music-btn');
+  if (musicOn) {
+    music.play().catch(()=>{});
+    btn.textContent = '🔊 Вкл';
+    btn.classList.remove('muted');
+  } else {
+    music.pause();
+    btn.textContent = '🔇 Выкл';
+    btn.classList.add('muted');
+  }
+}
+
 function playMusic() {
-  music.volume = 0.55;
-  music.play().catch(()=>{});
+  if (musicOn) {
+    music.volume = 0.55;
+    music.play().catch(()=>{});
+  }
+}
+
+// ===== MENU =====
+function goToMenu() {
+  gameState = 'menu';
+  if(animId) cancelAnimationFrame(animId);
+  document.getElementById('gameover').style.display = 'none';
+  document.getElementById('hud').style.display = 'none';
+  document.getElementById('mobile-hint').style.display = 'none';
+  document.getElementById('menu').style.display = 'flex';
 }
 
 // ===== GAME START =====
